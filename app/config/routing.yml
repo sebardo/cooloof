@@ -1,0 +1,36 @@
+login_check:
+    pattern:   /login_check
+    options:
+        i18n: false
+
+logout:
+    pattern:   /logout
+    options:
+        i18n: false
+
+login:
+    resource: "@FrontBundle/Controller/LoginController.php"
+    type:     annotation
+    prefix:   /
+
+blog:
+    resource: "@FrontBundle/Controller/BlogController.php"
+    type:     annotation
+    prefix:   /
+
+file:
+    resource: "@FrontBundle/Controller/FileController.php"
+    type:     annotation
+    prefix:   /
+
+admin:
+    resource: "@AdminBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+    options:
+      i18n: false
+    defaults:
+       _locale: es
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

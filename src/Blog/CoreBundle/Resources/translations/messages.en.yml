@@ -1,0 +1,25 @@
+Bad credentials.: The username or password are incorrect.
+
+menu:
+    inscriptions: Inscriptions
+    catatan_version: Catalan version
+    spanish_version: Spanish version
+    english_version: English version
+    catalan: català
+    spanish: español
+    english: english
+
+blog:
+    read_more: Read more
+    leave_comment: Leave a comment
+    published_by_at: Posted by %user% on %date%
+    comments: '{0} 0 comments|{1} 1 comment|]1,Inf] %count% comments'
+    gallery: Image gallery
+    leave_comment_help: The comment will be published once it has been reviewed by the center. All fields are required.
+    comment_published_by_at: %user% on %date% at %time% say:
+    send_comment: Send comment
+
+login:
+    user: User
+    password: Password
+    access: Access

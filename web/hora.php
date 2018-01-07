@@ -1,0 +1,9 @@
+<?
+
+
+echo date("r");
+
+phpinfo();
+
+
+?>

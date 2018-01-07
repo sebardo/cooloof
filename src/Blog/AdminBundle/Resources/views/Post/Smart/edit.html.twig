@@ -1,0 +1,217 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% set title = (post.id ? 'post.edit_post' : 'post.new_post') | trans %}
+
+{% block body_class %}edit-post{% endblock %}
+
+{% form_theme form _self %}
+
+{%- block choice_widget_options -%}
+    {% for group_label, choice in options %}
+        {%- if choice is iterable -%}
+            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+                {% set options = choice %}
+                {{- block('choice_widget_options') -}}
+            </optgroup>
+        {%- else -%}
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label | raw }}</option>
+        {%- endif -%}
+    {% endfor %}
+{%- endblock choice_widget_options -%}
+
+
+
+{% block breadcrumbs %}
+    <li><a href="{{ path('admin_post_list') }}">{{ 'post.posts' | trans }}</a></li>
+    <li>{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+    <div data-widget-sortable="false" data-widget-custombutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false" id="wid-id-4" class="jarviswidget well" role="widget">
+        <div role="content">
+            <p><i class="fa fa-edit"></i> {{ title }}</p>
+            <hr class="simple">
+            {% include 'AdminBundle:Post:Smart/form.html.twig' %}
+        </div>
+    </div>
+    {% include 'AdminBundle:Post:fileUploaded.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/admin/template/smart/js/plugin/summernote/summernote.min.js') }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.ui.widget.js") }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.iframe-transport.js") }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.fileupload.js") }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.colorbox-min.js") }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/bootstrap-waitingfor.js") }}"></script>
+
+    {% javascripts
+        "@AdminBundle/Resources/public/js/upload.js" %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        var translations = {
+            // ...
+            'max_uploads_title' : '{{ 'post.max_uploads_title' | trans }}',
+            'max_uploads_content' : '{{ 'post.max_uploads_content' | trans }}'
+            //...
+        }
+
+        var colorBoxParams = {
+            rel: 'colorbox',
+            reposition:true,
+            scalePhotos:true,
+            scrolling:false,
+            previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+            next:'<i class="ace-icon fa fa-arrow-right"></i>',
+            close:'&times;',
+            current:'{current} of {total}',
+            maxWidth:'100%',
+            maxHeight:'100%',
+            onOpen:function(){
+                $overflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed:function(){
+                document.body.style.overflow = $overflow;
+            },
+            onComplete:function(){
+                $.colorbox.resize();
+            }
+        };
+
+        var colorBoxParams2 = {
+            rel: 'colorbox-image',
+            reposition:true,
+            scalePhotos:true,
+            scrolling:false,
+            previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+            next:'<i class="ace-icon fa fa-arrow-right"></i>',
+            close:'&times;',
+            current:'{current} of {total}',
+            maxWidth:'100%',
+            maxHeight:'100%',
+            onOpen:function(){
+                $overflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed:function(){
+                document.body.style.overflow = $overflow;
+            },
+            onComplete:function(){
+                $.colorbox.resize();
+            }
+        };
+
+        $(document).ready(function()
+        {
+            $('.summernote-es').summernote({
+                onImageUpload: uploadImages,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'hr']],
+                    //['view', ['fullscreen', 'codeview']],
+                ],
+                defaultFontName: 'DINAlternateRegular'
+            });
+
+            $('.summernote-ca').summernote({
+                onImageUpload: uploadImages,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'hr']],
+                ],
+                defaultFontName: 'DINAlternateRegular'
+            });
+
+            $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorBoxParams);
+            $('.ace-thumbnails [data-rel="colorbox-image"]').colorbox(colorBoxParams2);
+
+            $(".duplicate-post").click(function(e) {
+                var button = $(this);
+                $.SmartMessageBox({
+                    title : "{{ 'post.duplicate_post' | trans }}",
+                    content : "{{ 'post.duplicate_confirm_text' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        location.href = $(button).attr('href');
+                    }
+                });
+                e.preventDefault();
+            });
+        });
+
+
+        var uploadImages = function (files, editor, $editable)
+        {
+            for (var i = 0; i < files.length; i++)
+            {
+                var formData = new FormData();
+                formData.append("file", files[i]);
+
+                waitingDialog.show('{{ 'labels.loading_wait' | trans }}');
+
+                $.ajax({
+                    url: '{{ path('admin_post_upload_content_image') }}',
+                    data: formData,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data)
+                    {
+                        waitingDialog.hide();
+                        if (data.status == 'OK') {
+                            editor.insertImage($editable, data.fullPath);
+                        }
+                        else
+                        {
+                            if (data.message) {
+                                $.SmartMessageBox({
+                                    title : "{{ 'labels.error_happened' | trans }}",
+                                    content : data.message,
+                                    buttons : '[{{ 'labels.accept' | trans }}]'
+                                });
+                            }
+                            else {
+                                $.SmartMessageBox({
+                                    title : "{{ 'labels.error_happened' | trans }}",
+                                    content : "{{ 'labels.we_apologize_try_later' | trans }}",
+                                    buttons : '[{{ 'labels.accept' | trans }}]'
+                                });
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        waitingDialog.hide();
+                        $.SmartMessageBox({
+                            title : "{{ 'labels.error_happened' | trans }}",
+                            content : "{{ 'labels.we_apologize_try_later' | trans }}",
+                            buttons : '[{{ 'labels.accept' | trans }}]'
+                        });
+                    }
+                });
+            }
+
+
+        };
+
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/css/vendor/summernote.css") }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/css/vendor/colorbox.css") }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/css/vendor/ace-gallery.css") }}">
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% block body_class %}admin-user{% endblock %}
+
+{% block breadcrumbs %}
+    <li>{{ 'week.weeks_list' | trans }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa fa-calendar fa-fw"></i>
+                {{ 'week.weeks' | trans }}
+            </h1>
+        </div>
+    </div>
+
+    <section class="" id="widget-grid">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                <div data-widget-editbutton="false" id="wid-id-0" class="jarviswidget jarviswidget-color-darken" role="widget">
+                    <header role="heading">
+                        <div class="jarviswidget-ctrls" role="menu">
+                            <a data-placement="bottom" title="" rel="tooltip" class="button-icon jarviswidget-fullscreen-btn" href="javascript:void(0);" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a>
+                        </div>
+                        <h2>{{ 'week.weeks_list' | trans }}</h2>
+                        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+                    </header>
+                    <div role="content">
+                        <div class="widget-body no-padding">
+                            {% if pagination | length %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>{{ 'week.center' | trans }}</th>
+                                            <th>{{ 'week.begin_date' | trans }}</th>
+                                            <th>{{ 'week.end_date' | trans }}</th>
+                                            <th>{{ 'week.schedule' | trans }}</th>
+                                            <th>{{ 'week.user' | trans }}</th>
+                                            <th>{{ 'week.password' | trans }}</th>
+                                            <th>{{ 'week.active' | trans }}</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for week in pagination %}
+                                            <tr>
+                                                <td>{{ week.centerName | raw }}</td>
+                                                <td>{{ week.startsAt | date('d/m/Y') }}</td>
+                                                <td>{{ week.endsAt | date('d/m/Y') }}</td>
+                                                <td>{{ week.schedule | raw }}</td>
+                                                <td>{{ week.profile ? week.profile.user.userName : '' }}</td>
+                                                <td>{{ week.profile ? week.profile.plainPassword : '' }}</td>
+                                                <td>{{ week.profile ? (week.profile.user.active ? 'labels.yes' | trans : 'labels.no' | trans) : '' }}</td>
+                                                <td align="center" nowrap>
+                                                    <a href="{{ path('admin_week_edit_user', { id: week.id }) }}" class="btn bg-color-blue txt-color-white btn-xs" title="{{ 'week.edit_user' | trans }}"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center raw-paginator">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            {% else %}
+                                <div class="no-results">
+                                    <i class="fa-fw fa fa-info"></i>
+                                    {{ 'post.no_posts' | trans }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        (function($) {
+            $(".delete-record").click(function(e) {
+                var button = $(this);
+                $.SmartMessageBox({
+                    title : "{{ 'labels.delete_confirm' | trans }}",
+                    content : "{{ 'labels.delete_confirm_alert' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        location.href = $(button).attr('href');
+                    }
+                });
+                e.preventDefault();
+            })
+        })(jQuery);
+    </script>
+
+{% endblock %}

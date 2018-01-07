@@ -1,0 +1,23 @@
+{% if uploads is defined and uploads | length %}
+    <div id="sidebar">
+        {% for upload in uploads %}
+            {% if upload.type == constant('Blog\\CoreBundle\\Entity\\Upload::TYPE_BANNER_IMAGE') %}
+                {% if upload.link %}
+                    <a href="{{ upload.link }}" target="_blank">
+                {% endif %}
+                        <img src="{{ path('serve_upload_file', { folder: upload.id, locale: app.request.locale, fileName: upload.file, tmp: 0 }) }}" alt="{{ upload.name }}" data-link="{{ upload.link }}"/>
+                {% if upload.link %}
+                    </a>
+                {% endif %}
+            {% else %}
+                <div class="download">
+                    <i class="fa fa-download"></i>
+                    <a href="{{ path('serve_upload_file', { folder: upload.id, locale: app.request.locale, fileName: upload.file, tmp: 0 }) }}">{{ upload.name ? upload.name : upload.file }}</a>
+                </div>
+            {% endif %}
+            {% if not loop.last %}
+            <hr/>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,13 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {% for field in form if field.vars.name != '_token' and field.vars.name != 'editId' %}
+        <div class="form-group">
+            {{ form_errors(field) }}
+            {{ form_label(field) }}
+            {{ form_widget(field) }}
+        </div>
+    {% endfor %}
+    <hr/>
+    <div class="form-group">
+        <button type="submit" class="btn bg-color-purple txt-color-white"><i class="fa fa-save"></i> {{ 'labels.save' | trans }}</button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,128 @@
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    <div class="form-group">
+        {{ form_row(form.translations) }}
+    </div>
+    <hr/>
+    <div class="form-group {{ not form.week.vars.valid ? 'has-error' : '' }}">
+        {{ form_errors(form.week) }}
+        {{ form_label(form.week) }}
+        {{ form_widget(form.week) }}
+    </div>
+    <div class="form-group {{ not form.date.vars.valid ? 'has-error' : '' }}">
+        {{ form_errors(form.date) }}
+        {{ form_label(form.date) }}
+        {{ form_widget(form.date) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.active) }}
+    </div>
+
+    <div class="gallery">
+        <ul id="main-gallery" class="ace-thumbnails clearfix">
+            {% if post.image %}
+                <li>
+                    <a data-rel="colorbox-image" href="{{ path('serve_file', { id: post.id, fileName: post.image, folder: 'large', type: 'main' }) }}" class="cboxElement">
+                        <img width="150" height="150" src="{{ path('serve_file', { id: post.id, fileName: post.image, folder: 'thumbnails', type: 'main' }) }}">
+                    </a>
+                    <div class="tools">
+                        <a rel="tooltip" title="{{ 'labels.delete' | trans }}" data-action="delete-gallery" href="#" data-url="{{ path('admin_post_upload_main_image', { id: post.id, file: post.image }) }}">
+                            <i class="ace-icon fa fa-times red"></i>
+                        </a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="files-widget">
+        <a id="btn-upload-main-file" class="btn btn-sm bg-color-pinkDark txt-color-white fileinput-button">
+            <i class="fa fa-upload"></i>
+            <span>{{ 'post.select_main_image' | trans }}</span>
+        </a>
+        <div class="fileinput-button">
+            {{ form_widget(form.image, { 'attr': { 'data-url': path('admin_post_upload_main_image', { editId: post.editId }) } }) }}
+        </div>
+    </div>
+
+    <div class="files-container">
+        <table class="table table-striped">
+            <tbody class="files" id="files-table-image-body">
+            {% for file in existingMainImageFiles %}
+                <tr class="template-download fade in">
+                    <td>
+                        <p class="name">
+                            <a target="_blank" title="{{ file }}" href="{{ path('serve_temp_file', { editId: post.editId, name: file, type: 'main' }) }}">{{ file }}</a>
+                        </p>
+                    </td>
+                    <td>
+                        <span class="size">&nbsp;</span>
+                    </td>
+                    <td>
+                        <a rel="tooltip" title="Delete" data-action="delete" class="btn bg-color-blue txt-color-white delete" href="#" data-url="{{ path('admin_post_upload_main_image', { editId: post.editId, file: file }) }}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="gallery">
+        <ul class="ace-thumbnails clearfix">
+            {% for image in post.images %}
+                <li>
+                    <a data-rel="colorbox" href="{{ path('serve_file', { id: post.id, fileName: image.name, folder: 'large', type: 'gallery' }) }}" class="cboxElement">
+                        <img width="150" height="150" src="{{ path('serve_file', { id: post.id, fileName: image.name, folder: 'thumbnails', type: 'gallery' }) }}">
+                    </a>
+                    <div class="tools">
+                        <a rel="tooltip" title="{{ 'labels.delete' | trans }}" data-action="delete-gallery" href="#" data-url="{{ path('admin_post_upload_gallery_images', { id: post.id, file: image.name }) }}">
+                            <i class="ace-icon fa fa-times red"></i>
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="files-widget">
+        <a id="btn-upload-file" class="btn btn-sm bg-color-pinkDark txt-color-white fileinput-button">
+            <i class="fa fa-upload"></i>
+            <span>{{ 'post.select_gallery_images' | trans }}</span>
+        </a>
+        <div class="fileinput-button">
+            {{ form_widget(form.images, { 'attr': { 'data-url': path('admin_post_upload_gallery_images', { editId: post.editId, type: 'gallery' }) } }) }}
+        </div>
+    </div>
+
+    <div class="files-container">
+        <table class="table table-striped">
+            <tbody class="files" id="files-table-body">
+            {% for file in existingFiles %}
+                <tr class="template-download fade in">
+                    <td>
+                        <p class="name">
+                            <a target="_blank" title="{{ file }}" href="{{ path('serve_temp_file', { editId: post.editId, name: file, type: 'gallery' }) }}">{{ file }}</a>
+                        </p>
+                    </td>
+                    <td>
+                        <span class="size">&nbsp;</span>
+                    </td>
+                    <td>
+                        <a rel="tooltip" title="Delete" data-action="delete" class="btn bg-color-blue txt-color-white delete" href="#" data-url="{{ path('admin_post_upload_gallery_images', { editId: post.editId, file: file, type: 'gallery' }) }}">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr/>
+    <div class="form-group">
+        <button type="submit" class="btn bg-color-blue txt-color-white"><i class="fa fa-save"></i> {{ 'labels.save' | trans }}</button>
+        {% if post.id %}
+        <a href="{{ path('admin_post_duplicate', { id: post.id }) }}" class="btn bg-color-red txt-color-white duplicate-post" title="{{ 'post.duplicate_post' | trans }}"><i class="fa fa-files-o"></i> {{ 'post.duplicate_post' | trans }}</a>
+        {% endif %}
+    </div>
+{{ form_end(form) }}

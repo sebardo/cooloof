@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="template.service" class="Blog\CoreBundle\Service\TemplateService"/>
+
+        <service id="util.service" class="Blog\CoreBundle\Service\UtilService"/>
+
+        <service id="blog.twig.menu_extension" class="Blog\CoreBundle\Twig\MenuExtension">
+            <argument type="service" id="request_stack" />
+            <tag name="twig.extension" />
+        </service>
+
+        <service id="login.listener" class="Blog\CoreBundle\Listener\LoginListener">
+            <argument type="service" id="security.context" />
+            <argument type="service" id="router" />
+            <tag name="kernel.event_listener" event="security.interactive_login" />
+            <tag name="kernel.event_listener" event="kernel.response" />
+        </service>
+    </services>
+</container>

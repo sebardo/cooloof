@@ -1,0 +1,29 @@
+{% extends 'FrontBundle:Layout:ESF/layout.html.twig' %}
+
+{% block body_class %}class="login"{% endblock %}
+
+{% block content %}
+    <div class="intro">
+        <img src="{{ asset('bundles/front/images/bg-login.png') }}" alt="English Summer Fun"/>
+    </div>
+    <div class="login">
+        {% if error %}
+            <div class="error">
+                {{ error.message|trans({},'messages') }}
+            </div>
+        {% endif %}
+        <form action="{{ path('login_check') }}" method="POST">
+            <div>
+                <label class="label">{{ 'login.user' | trans }}</label>
+                <input type="text" name="_username" value="{{ last_username }}" maxlength="50" required="required"/>
+            </div>
+            <div>
+                <label class="label">{{ 'login.password' | trans }}</label>
+                <input type="password" name="_password" maxlength="50" required="required"/>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">{{ 'login.access' | trans }}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

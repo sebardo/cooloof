@@ -1,0 +1,33 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% set title = 'week.edit_user' | trans %}
+
+{% block body_class %}edit-user{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{{ path('admin_week_list') }}">{{ 'week.weeks_list' | trans }}</a></li>
+    <li>{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+    <div data-widget-sortable="false" data-widget-custombutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false" id="wid-id-4" class="jarviswidget well" role="widget">
+        <div role="content">
+            <p><i class="fa fa-edit"></i> {{ title }}</p>
+            <hr class="simple">
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+                {% for field in form if field != form._token %}
+                    <div class="form-group {{ not field.vars.valid ? 'has-error' : '' }}">
+                        {{ form_errors(field) }}
+                        {{ form_label(field) }}
+                        {{ form_widget(field) }}
+                    </div>
+                {% endfor %}
+
+                <hr/>
+                <div class="form-group">
+                    <button type="submit" class="btn bg-color-blue txt-color-white"><i class="fa fa-save"></i> {{ 'labels.save' | trans }}</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

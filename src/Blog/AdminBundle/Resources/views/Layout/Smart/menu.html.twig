@@ -1,0 +1,45 @@
+<!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+
+    <div class="logo">
+        <img src="{{ asset("bundles/admin/images/logo.png") }}" alt="English Summer Fun" class="full">
+        <img src="{{ asset("bundles/admin/images/logo-mini.png") }}" alt="English Summer Fun" class="mini">
+    </div>
+
+    <!-- User info -->
+    <div class="login-info">
+        <span>
+            <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                <span>{{ app.user }}</span>
+                <i class="fa fa-angle-down"></i>
+            </a>
+        </span>
+    </div>
+    <!-- end user info -->
+
+    <nav>
+        <ul>
+            <li {% if 'post' in route and 'comment' in route == false %}class="active"{% endif %}>
+                <a title="{{ 'post.posts' | trans }}" href="{{ path('admin_post_list') }}"><i class="fa fa-lg fa-fw fa-quote-left"></i> <span class="menu-item-parent">{{ 'post.posts' | trans }}</span></a>
+            </li>
+            <li {{ 'week' in route ? 'class="active"' : '' }}>
+                <a title="{{ 'week.weeks' | trans }}" href="{{ path('admin_week_list') }}"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">{{ 'week.weeks' | trans }}</span></a>
+            </li>
+            <li {{ 'comment' in route ? 'class="active"' : '' }}>
+                <a title="{{ 'comment.comments' | trans }}" href="{{ path('admin_post_comments_all_list') }}"><i class="fa fa-lg fa-fw fa-comments-o"></i>
+                    <span class="menu-item-parent">{{ 'comment.comments' | trans }}</span>
+                    {{ render_num_comments(app.user) }}
+                </a>
+            </li>
+            <li {{ 'upload' in route ? 'class="active"' : '' }}>
+                <a title="{{ 'upload.uploads_menu' | trans }}" href="{{ path('upload_list') }}"><i class="fa fa-lg fa-fw fa-upload"></i> <span class="menu-item-parent">{{ 'upload.uploads_menu' | trans }}</span></a>
+            </li>
+        </ul>
+    </nav>
+
+
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+</aside>

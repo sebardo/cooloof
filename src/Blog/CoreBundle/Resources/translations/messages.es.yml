@@ -1,0 +1,160 @@
+meta:
+    description: Kids&Us inglés para niños de 1 a 18 años. Metodología de aprendizaje basada en el proceso natural de adquisición de la lengua materna
+Next: Siguiente
+Previous: Anterior
+Bad credentials.: El nombre de usuario y/o contraseña son incorrectos.
+labels:
+    home: Inicio
+    send: Enviar
+    delete: Borrar
+    edit: Editar
+    update: Actualizar
+    next: Siguiente
+    search: Buscar
+    filter: Filtrar
+    read_more: Leer más
+    modify: Modificar
+    back: Volver
+    cancel: Cancelar
+    no: No
+    yes: Sí
+    previous: Anterior
+    save: Guardar
+    active: Activo
+    update_ok: Registro actualizado correctamente
+    update_ko: Lo sentimos, no se pudo actualizar el registo. Inténtelo de nuevo más tarde.
+    create_ok: Registro creado correctamente
+    create_ko: Lo sentimos, no se pudo crear el registo. Inténtelo de nuevo más tarde.
+    delete_ok: Registro eliminado correctamente
+    delete_ko: Lo sentimos, no pudo borrar el registro. Inténtelo de nuevo más tarde.
+    delete_confirm: ¿Seguro que quieres borrar el registro?
+    delete_confirm_alert: Esta acción es irreversible
+    loading: Cargando...
+    rent: Alquilar
+    add: Añadir
+    loading_wait: Cargando, espere por favor...
+    required_fields: '* Campos requeridos'
+    view_details: Ver detalles
+    created_at: Fecha de creación
+    updated_at: Fecha de actualización
+    logout: Salir
+    date: Fecha
+    accept: Aceptar
+    error_happened: Se ha producido un error
+    we_apologize_try_later: Lo sentimos, intentelo de nuevo más tarde
+    name: Nombre
+    no_completed_action: La acción no se pudo completar
+    creation_date: Fecha de creación
+    order: Orden
+
+menu:
+    activities: Actividades
+    where: ¿Dónde?
+    inscriptions: Inscripciones
+    catatan_version: Versión en catalán
+    spanish_version: Versión en español
+    catalan: català
+    spanish: español
+    english: inglés
+
+post:
+    posts: Entradas
+    new_post: Nueva entrada
+    search_posts: Buscar entradas...
+    title: Título
+    date: Fecha
+    post_list: Listado de entradas
+    no_posts: No hay entradas
+    edit_post: Editar entrada
+    new_post: Nueva entrada
+    publish_date: Fecha de publicación
+    description: Descripción
+    slug_description: URL (cadena de texto, separada por guiones, sin acentos ni otros caracteres especiales. Si no se especifica, se autogenera con el título)
+    url: Url
+    select_gallery_images: Seleccionar imágenes galería (Evitar imágenes muy pesadas)
+    error_file_size: Lo sentimos, el fichero seleccionado supera en tamaño el máximo permitido
+    error_limit_files: Lo sentimos, has superado el máximo de ficheros permitidos
+    error_file_type: Lo sentimos, el tipo de fichero que has selecionado no esta permitido.
+    file_upload_ok: El fichero se subió correctamente
+    week: Semana
+    select_main_image: Seleccionar imagen principal (Anchura mínima 820px. Evitar imagenes muy pesadas)
+    max_uploads_title: Únicamente puede haber una imagen principal
+    max_uploads_content: Borra primero la imagen actual si quieres cambiarla
+    introduction_text: Texto introductorio
+    name: Nombre
+    comment: Comentario
+    comment_sent_ok: El comentario ha sido enviado correctamente, gracias.
+    error_min_resolution: La resolución de la imagen ha de tener al menos 820px de ancho.
+    duplicated_ok: Entrada duplicada correctamente. La entrada actual es la duplicada
+    duplicate_post: Duplicar entrada
+    duplicate_confirm_text: ¿Seguro que quieres duplicar la entrada?
+    upload_file_size_restriction: El tamaño máximo permitido para imagenes en el contenido de la entrada es de %size%
+
+comment:
+    name: Nombre
+    comment: Comentario
+    view_comments: Ver comentarios
+    comments: Comentarios
+    comments_list: Listado de comentarios
+    search_comments: Buscar comentarios...
+    no_comments: No hay comentarios
+    validated: Validado
+    edit_comment: Editar comentario
+    comments: Comentarios
+    validate: Validar
+    select_comments_title: No hay selección
+    select_comments_content: Para validar comentarios has de seleccionar al menos uno
+    post: Entrada
+    validated_ok: Comentarios validados correctamente
+
+week:
+    weeks: Semanas
+    center: Centro
+    begin_date: Fecha inicio
+    end_date: Fecha fin
+    weeks_list: Listado de semanas
+    user: Usuario
+    user_with_help: Usuario (introducir letras o números en minúsculas y sin espacios)
+    password: Contraseña
+    password_with_help: Contraseña (mínimo 6 caracteres)
+    active: Activo
+    edit_user: Editar usuario
+    user_already_exists: El usuario ya existe, por favor introduce otro diferente
+    schedule: Horario
+
+blog:
+    read_more: Leer más
+    leave_comment: Deja tu comentario
+    published_by_at: Publicado por %user% el %date%
+    comments: '{0} 0 comentarios|{1} 1 comentario|]1,Inf] %count% comentarios'
+    gallery: Galería de imágenes
+    leave_comment_help: El comentario será publicado una vez sea revisado y aprobado por el centro. Todos los campos son obligatorios.
+    comment_published_by_at: %user% el %date% a las %time% dijo:
+    send_comment: Enviar comentario
+
+login:
+    user: Usuario
+    password: Contraseña
+    remember: Recordarme
+    access: Acceder
+
+upload:
+  uploads_menu: Uploads
+  new_upload: Nuevo fichero
+  uploads: Subida de ficheros
+  search_uploads: Buscar ficheros...
+  uploads_list: Listado de ficheros
+  no_uploads: No existen ficheros
+  edit_upload: Editar fichero
+  new_upload: Nuevo fichero
+  url: Url
+  type_banner_image: Imagen banner
+  type_undefined: Sin tipo
+  type: Tipo
+  delete_ko: No se puede eliminar el fichero, está siendo usado.
+  type_attachment: Adjunto
+  file: Fichero
+  link: Enlace
+  select_file: Seleccionar fichero
+  delete_first_body: Para subir un nuevo fichero hay que borrar primero el actual
+  delete_file: ¿Seguro que quiere borrar el fichero?

@@ -1,0 +1,128 @@
+{% extends 'FrontBundle:Layout:ESF/layout.html.twig' %}
+
+{% block body_class %}class="blog-detail"{% endblock %}
+
+{% block title %}{{ post.title }} - English Summer Fun by Kids&Us{% endblock %}
+
+{% block content %}
+
+    <article>
+        {% if post.image %}
+            <div class="image">
+                <img src="{{ path('serve_file', { id: post.id, fileName: post.image, folder: 'large', type: 'main' }) }}"/>
+            </div>
+        {% endif %}
+        <h1>{{ post.title }}</h1>
+        {% if post.content and post.content | length %}
+            <div class="post-content">
+                {{ post.content | raw }}
+            </div>
+        {% elseif post.introduction %}
+            <div class="post-content">
+                {{ post.introduction }}
+            </div>
+        {% endif %}
+        {% if post.images | length %}
+            <h3>{{ 'blog.gallery' | trans }}</h3>
+            <div class="gallery">
+                <ul class="ace-thumbnails clearfix">
+                    {% for image in post.images %}
+                        <li>
+                            <a data-rel="colorbox" href="{{ path('serve_file', { id: post.id, fileName: image.name, folder: 'large', type: 'gallery' }) }}" class="cboxElement">
+                                <img width="150" height="150" src="{{ path('serve_file', { id: post.id, fileName: image.name, folder: 'thumbnails', type: 'gallery' }) }}">
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="separator">
+            <p class="left">{{ 'blog.published_by_at' | trans({ '%user%': 'Kids&Us', '%date%': post.date | date('d/m/Y') }) }}</p>
+            {% if post.comments | length %}
+                <p class="right">{{ 'blog.comments' | transchoice(post.comments | length) }}</p>
+            {% endif %}
+            <div style="clear: both;"></div>
+        </div>
+    </article>
+
+    {% if post.comments | length %}
+        <h1 id="comments">{{ 'comment.comments' | trans }}</h1>
+        <aside class="comments">
+            {% for comment in post.comments if comment.validated %}
+                <div class="comment">
+                    <h3>{{ 'blog.comment_published_by_at' | trans({ '%user%': comment.name, '%date%': comment.created | date('d/m/Y'), '%time%': comment.created | date('H:i') }) }}</h3>
+                    <p>{{ comment.comment }}</p>
+                </div>
+            {% endfor %}
+        </aside>
+    {% endif %}
+    <hr/>
+    <h1>{{ 'blog.leave_comment' | trans }}</h1>
+    <p>{{ 'blog.leave_comment_help' | trans }}</p>
+    {{ form_start(form, {attr: {id: 'form-comment', novalidate: 'novalidate'}}) }}
+        {% for field in form if field != form._token %}
+            <div class="form-group {{ not field.vars.valid ? 'has-error' : '' }}">
+                {{ form_errors(field) }}
+                {{ form_label(field) }}
+                {{ form_widget(field) }}
+            </div>
+        {% endfor %}
+
+        <div class="form-group submit">
+            <a id="btn-submit" href="#" class="btn">{{ 'blog.send_comment' | trans }}</a>
+        </div>
+    {{ form_end(form) }}
+
+    <div class="back">
+        <hr/>
+        <a href="{{ path('blog_list') }}" class="btn">{{ 'labels.back' | trans }}</a>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.colorbox-min.js") }}"></script>
+
+    <script type="text/javascript">
+        var colorBoxParams = {
+            rel: 'colorbox',
+            reposition:true,
+            scalePhotos:true,
+            scrolling:false,
+            previous:'<i class="ace-icon fa fa-arrow-left"></i>',
+            next:'<i class="ace-icon fa fa-arrow-right"></i>',
+            close:'&times;',
+            current:'{current} of {total}',
+            maxWidth:'100%',
+            maxHeight:'100%',
+            onOpen:function(){
+                $overflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed:function(){
+                document.body.style.overflow = $overflow;
+            },
+            onComplete:function(){
+                $.colorbox.resize();
+            }
+        };
+
+        $(document).ready(function()
+        {
+            $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorBoxParams);
+            $('#btn-submit').click(function(e) {
+                e.preventDefault();
+                $('#form-comment').submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/css/vendor/colorbox.css") }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/css/vendor/ace-gallery.css") }}">
+{% endblock %}
+

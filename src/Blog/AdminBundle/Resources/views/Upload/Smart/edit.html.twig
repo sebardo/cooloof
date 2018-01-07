@@ -1,0 +1,236 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block translatable_file_widget %}
+    {%- set type = type|default('hidden') -%}
+    {{ block('form_widget_simple') }}
+    <div class="files-widget">
+        <a class="btn btn-sm bg-color-pinkDark txt-color-white fileinput-button" data-id="{{ id }}">
+            <i class="fa fa-upload"></i>
+            <span>{{ 'upload.select_file' | trans }}</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block a2lix_translations_gedmo_widget %}
+    {% if form.vars.simple_way %}
+        {{ block('a2lix_translations_widget') }}
+    {% else %}
+        <div class="a2lix_translations tabbable">
+            <ul class="a2lix_translationsLocales nav nav-tabs">
+                {% for translationsLocales in form %}
+                    {% set isDefaultLocale = 'defaultLocale' == translationsLocales.vars.name %}
+
+                    {% for translationsFields in translationsLocales %}
+                        {% set locale = translationsFields.vars.name %}
+
+                        <li {% if app.request.locale == locale %}class="active"{% endif %}>
+                            <a href="javascript:void(0)" data-toggle="tab" data-target=".a2lix_translationsFields-{{ locale }}">
+                                {{ locale|capitalize }} {% if isDefaultLocale %}[Default]{% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+
+            <div class="a2lix_translationsFields tab-content">
+                {% for translationsLocales in form %}
+                    {% for translationsFields in translationsLocales %}
+                        {% set locale = translationsFields.vars.name %}
+
+                        <div class="a2lix_translationsFields-{{ locale }} tab-pane {% if app.request.locale == locale %}active{% endif %}">
+                            {{ form_widget(translationsFields) }}
+
+                            <div class="files-widget">
+                                <a class="btn btn-sm bg-color-pinkDark txt-color-white fileinput-button" data-locale="{{ locale }}">
+                                    <i class="fa fa-upload"></i>
+                                    <span>{{ 'upload.select_file' | trans }}</span>
+                                </a>
+                            </div>
+
+                            <div id="file-{{ locale }}">
+                                {% if translationsFields.children.file.vars.value %}
+                                    <table class="table">
+                                        <tr>
+                                            <td>{{ translationsFields.children.file.vars.value }}</td>
+                                            <td>
+                                                <a class="btn btn-xs btn-danger delete-file" data-locale="{{ locale }}" data-file="{{ translationsFields.children.file.vars.value }}"><i class="fa fa-trash-o"></i></a>
+                                                <a class="btn btn-xs btn-success serve-upload-file" data-locale="{{ locale }}" data-file="{{ translationsFields.children.file.vars.value }}"><i class="fa fa-download"></i></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body_class %}document{% endblock %}
+
+{% set title = (upload.id ? 'upload.edit_upload' : 'upload.new_upload') | trans %}
+
+{% block breadcrumbs %}
+    <li><a href="{{ path('upload_list') }}">{{ 'upload.uploads' | trans }}</a></li>
+    <li>{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+    <div data-widget-sortable="false" data-widget-custombutton="false" data-widget-fullscreenbutton="false" data-widget-deletebutton="false" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-colorbutton="false" id="wid-id-4" class="jarviswidget well" role="widget">
+        <div role="content">
+            <p><i class="fa fa-edit"></i> {{ title }}</p>
+            <hr class="simple">
+            {% include 'AdminBundle:Upload:Smart/form.html.twig' %}
+            <form id="upload-form" action="{{ path('admin_upload_file') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                <input type="hidden" name="locale"/>
+                {% if upload.id %}
+                    <input type="hidden" name="id" value="{{ upload.id }}"/>
+                {% else %}
+                    <input type="hidden" name="editId" value="{{ upload.editId }}"/>
+                {% endif %}
+                <input type="file" name="file" id="file"/>
+                <input type="hidden" name="oldFile"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/admin/js/vendor/jquery.form.min.js") }}"></script>
+    <script src="{{ asset("bundles/admin/js/vendor/bootstrap-waitingfor.js") }}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    <script type="text/javascript">
+        var translations = {
+            // ...
+            'max_uploads_title' : '{{ 'document.max_uploads_title' | trans }}',
+            'max_uploads_content' : '{{ 'document.max_uploads_content' | trans }}',
+            'accept' : '{{ 'labels.accept' | trans }}',
+            'delete_confirm' : '{{ 'labels.delete_confirm' | trans }}',
+            'delete_confirm_alert' : '{{ 'labels.delete_confirm_alert' | trans }}',
+            'no' : '{{ 'labels.no' | trans }}',
+            'yes' : '{{ 'labels.yes' | trans }}'
+            //...
+        }
+
+        $(document).ready(function()
+        {
+            $('.fileinput-button').click(function(e) {
+
+                if (!$.trim($('#file-' + $(this).data('locale')).html())) {
+                    $('#file').trigger('click');
+                    $('input[name=locale]').val($(this).data('locale'));
+                }
+                else {
+                    $.SmartMessageBox({
+                        title : "{{ 'labels.no_completed_action' | trans }}",
+                        content : "{{ 'upload.delete_first_body' | trans }}",
+                        buttons : '[{{ 'labels.accept' | trans }}]'
+                    });
+                }
+            });
+
+            $('#file').change(function(e) {
+                waitingDialog.show('{{ 'labels.loading_wait' | trans }}');
+                $('#upload-form').ajaxSubmit({
+                    success: function(data) {
+                        waitingDialog.hide();
+                        if (data.status == 'OK') {
+                            $('input[id*=' + data.locale + '_file]').val(data.file);
+                            $('#file-' + data.locale).html(data.content);
+                        }
+                        else {
+                            $.SmartMessageBox({
+                                title : "{{ 'labels.error_happened' | trans }}",
+                                content : "{{ 'labels.we_apologize_try_later' | trans }}",
+                                buttons : '[{{ 'labels.accept' | trans }}]'
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        waitingDialog.hide();
+                        console.log(data);
+                    }
+                });
+            });
+
+            $(document).on('click', '.delete-file', function(e)
+            {
+                var button = $(this);
+                e.preventDefault();
+                $.SmartMessageBox({
+                    title : "{{ 'upload.delete_file' | trans }}",
+                    content : "{{ 'labels.delete_confirm_alert' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        var locale = $(button).data('locale');
+                        var file = $(button).data('file');
+                        var table = $(button).closest('table');
+
+                        {% if upload.id %}
+                        var id = '&id={{ upload.id }}';
+                        {% else %}
+                        var id = '&editId={{ upload.editId }}';
+                        {% endif %}
+
+                        if (locale && file)
+                        {
+                            waitingDialog.show('{{ 'labels.loading_wait' | trans }}');
+                            $.ajax({
+                                type: 'GET',
+                                url: '{{ path('admin_upload_delete_file') }}',
+                                data: 'locale=' + locale + '&fileName=' + file + id,
+                                success: function(data) {
+                                    waitingDialog.hide();
+                                    if (data.status == 'OK')
+                                    {
+                                        if (table) {
+                                            $(table).remove();
+                                        }
+                                    }
+                                    else {
+                                        $.SmartMessageBox({
+                                            title : "{{ 'labels.error_happened' | trans }}",
+                                            content : "{{ 'labels.we_apologize_try_later' | trans }}",
+                                            buttons : '[{{ 'labels.accept' | trans }}]'
+                                        });
+                                    }
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                    waitingDialog.hide();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+
+            $(document).on('click', '.serve-upload-file', function(e)
+            {
+                var id = {{ upload.id ? upload.id : upload.editId }};
+                var tmp = {{ upload.id ? 0 : 1 }};
+
+                window.open(
+                        Routing.generate('serve_upload_file', { folder: id, locale: $(this).data('locale'), fileName: $(this).data('file'), tmp: tmp }),
+                        '_blank'
+                );
+            });
+
+            $('#type').change(function(e) {
+                if ($(this).val() == {{ constant('Blog\\CoreBundle\\Entity\\Upload::TYPE_BANNER_IMAGE') }}) {
+                    $('input[name*=link]').removeAttr('disabled');
+                }
+                else {
+                    $('input[name*=link]').attr('disabled', 'disabled').val('');
+                }
+            });
+        });
+    </script>
+{% endblock %}

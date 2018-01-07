@@ -1,0 +1,60 @@
+{% extends 'FrontBundle:Layout:ESF/layout.html.twig' %}
+
+{% block body_class %}class="blog-list"{% endblock %}
+
+{% block content %}
+
+    <div class="intro">
+        <h1 class="left">Blog</h1>
+        <a class="btn btn-primary right" href="{{ path('logout') }}" title="{{ 'labels.logout' | trans }}">{{ 'labels.logout' | trans | lower }}</a>
+        <div style="clear: both;"></div>
+    </div>
+
+    {% if pagination | length %}
+        {% for post in pagination %}
+            {% if post.active and date(post.date) < date() %}
+                <article>
+                    {% if post.image %}
+                        <div class="image left">
+                            <a href="{{ path('blog_detail', { slug: post.slug }) }}">
+                                <img src="{{ path('serve_file', { id: post.id, fileName: post.image, folder: 'thumbnails', type: 'main' }) }}"/>
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div class="text left">
+                        <h1><a href="{{ path('blog_detail', { slug: post.slug }) }}">{{ post.title }}</a></h1>
+
+                        {% if post.introduction %}
+                            <div class="introduction">
+                                <p>{{ post.introduction }}</p>
+                            </div>
+                        {% endif %}
+                        <div class="read-more">
+                            <a href="{{ path('blog_detail', { slug: post.slug }) }}">{{ 'blog.read_more' | trans }}...</a>
+                        </div>
+                    </div>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="separator">
+                        <p class="left">{{ 'blog.published_by_at' | trans({ '%user%': 'Kids&Us', '%date%': post.date | date('d/m/Y') }) }}</p>
+                        {% if post.comments | length %}
+                        <p class="right"><a href="{{ path('blog_detail', { slug: post.slug }) }}#comments">{{ 'blog.comments' | transchoice(post.comments | length) }}</a></p>
+                        {% endif %}
+                        <div style="clear: both;"></div>
+                    </div>
+                </article>
+            {% endif %}
+        {% endfor %}
+
+        {{ knp_pagination_render(pagination) }}
+    {% else %}
+        <div class="no-results">
+            <i class="fa-fw fa fa-info"></i>
+            {{ 'post.no_posts' | trans }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+

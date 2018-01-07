@@ -1,0 +1,160 @@
+.ace-thumbnails {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+}
+.ace-thumbnails > li {
+    border: 2px solid #333;
+    display: block;
+    float: left;
+    margin: 2px;
+    overflow: hidden;
+    position: relative;
+}
+.ace-thumbnails > li > *:first-child {
+    display: block;
+    position: relative;
+}
+.ace-thumbnails > li > *:first-child:focus {
+    outline: medium none;
+}
+.ace-thumbnails > li .tags {
+    background-color: transparent;
+    border-width: 0;
+    bottom: 0;
+    direction: rtl;
+    display: inline-block;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    vertical-align: inherit;
+    width: auto;
+}
+.ace-thumbnails > li .tags > .label-holder {
+    direction: ltr;
+    display: table;
+    margin: 1px 0 0;
+    opacity: 0.92;
+    text-align: left;
+}
+.ace-thumbnails > li .tags > .label-holder:hover {
+    opacity: 1;
+}
+.ace-thumbnails > li > .tools {
+    background-color: rgba(0, 0, 0, 0.55);
+    bottom: 0;
+    left: -30px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: all 0.2s ease 0s;
+    vertical-align: middle;
+    width: 24px;
+}
+.ace-thumbnails > li > .tools.tools-right {
+    left: auto;
+    right: -30px;
+}
+.ace-thumbnails > li > .tools.tools-bottom {
+    bottom: -30px;
+    height: 28px;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: auto;
+}
+.ace-thumbnails > li > .tools.tools-top {
+    bottom: auto;
+    height: 28px;
+    left: 0;
+    right: 0;
+    top: -30px;
+    width: auto;
+}
+.ace-thumbnails > li:hover > .tools {
+    left: 0;
+    right: 0;
+}
+.ace-thumbnails > li:hover > .tools.tools-bottom {
+    bottom: 0;
+    top: auto;
+}
+.ace-thumbnails > li:hover > .tools.tools-top {
+    bottom: auto;
+    top: 0;
+}
+.ace-thumbnails > li:hover > .tools.tools-right {
+    left: auto;
+    right: 0;
+}
+.ace-thumbnails > li > .in.tools {
+    left: 0;
+    right: 0;
+}
+.ace-thumbnails > li > .in.tools.tools-bottom {
+    bottom: 0;
+    top: auto;
+}
+.ace-thumbnails > li > .in.tools.tools-top {
+    bottom: auto;
+    top: 0;
+}
+.ace-thumbnails > li > .in.tools.tools-right {
+    left: auto;
+    right: 0;
+}
+.ace-thumbnails > li > .tools > a, .ace-thumbnails > li > *:first-child .inner a {
+    color: #fff;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: normal;
+    padding: 0 4px;
+}
+.ace-thumbnails > li > .tools > a:hover, .ace-thumbnails > li > *:first-child .inner a:hover {
+    color: #c9e2ea;
+    text-decoration: none;
+}
+.ace-thumbnails > li .tools.tools-bottom > a, .ace-thumbnails > li .tools.tools-top > a {
+    display: inline-block;
+}
+.ace-thumbnails > li > *:first-child > .text {
+    background-color: rgba(0, 0, 0, 0.55);
+    bottom: 0;
+    color: #fff;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    transition: all 0.2s ease 0s;
+}
+.ace-thumbnails > li > *:first-child > .text:before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    margin-right: 0;
+    vertical-align: middle;
+}
+.ace-thumbnails > li > *:first-child > .text > .inner {
+    display: inline-block;
+    margin: 0;
+    max-width: 90%;
+    padding: 4px 0;
+    vertical-align: middle;
+}
+.ace-thumbnails > li:hover > *:first-child > .text {
+    opacity: 1;
+}
+@media only screen and (max-width: 480px) {
+    .ace-thumbnails {
+        text-align: center;
+    }
+    .ace-thumbnails > li {
+        display: inline-block;
+        float: none;
+    }
+}

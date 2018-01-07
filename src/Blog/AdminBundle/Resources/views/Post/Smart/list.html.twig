@@ -1,0 +1,147 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% block body_class %}admin-user{% endblock %}
+
+{% block breadcrumbs %}
+    <li>{{ 'post.post_list' | trans }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa fa-quote-left fa-fw"></i>
+                {{ 'post.posts' | trans }}
+            </h1>
+        </div>
+        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6">
+            <div class="buttons-box">
+                <a class="btn btn-sm bg-color-blue txt-color-white" href="{{ path('admin_post_new') }}">
+                    <i class="fa fa-plus"></i>
+                    {{ 'post.new_post' | trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="" id="widget-grid">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                <div data-widget-editbutton="false" id="wid-id-0" class="jarviswidget jarviswidget-color-darken" role="widget">
+                    <header role="heading">
+                        <div class="jarviswidget-ctrls" role="menu">
+                            <a data-placement="bottom" title="" rel="tooltip" class="button-icon jarviswidget-fullscreen-btn" href="javascript:void(0);" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a>
+                        </div>
+                        <h2>{{ 'post.post_list' | trans }}</h2>
+                        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+                    </header>
+                    <div role="content">
+                        <div class="widget-body no-padding">
+                            <!-- Buscador -->
+                            <div class="well">
+                                <form action="{{ path('admin_post_list') }}" method="POST">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="{{ 'post.search_posts' | trans }}" class="form-control" name="query" value="{{ app.request.get('query') }}">
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn bg-color-blue txt-color-white">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <a href="{{ path('admin_post_list') }}" class="btn bg-color-blue txt-color-white">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- End Buscador -->
+                            {% if pagination | length %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            {% if app.environment == 'dev' %}
+                                            <th>{{ 'Id' }}</th>
+                                            {% endif %}
+                                            <th>{{ 'post.title' | trans }}</th>
+                                            <th>{{ 'post.date' | trans }}</th>
+                                            <th>{{ 'post.week' | trans }}</th>
+                                            <th>{{ 'labels.active' | trans }}</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for post in pagination %}
+                                            <tr>
+                                                {% if app.environment == 'dev' %}
+                                                <td>{{ post.id }}</td>
+                                                {% endif %}
+                                                <td><a href="{{ path('admin_post_edit', { id: post.id }) }}">{{ post.title }}</a></td>
+                                                <td>{{ post.date | date('d/m/Y') }}</td>
+                                                <td>{{ post.week }}</td>
+                                                <td>{{ post.active ? 'labels.yes' | trans : 'labels.no' | trans }}</td>
+                                                <td align="left" nowrap>
+                                                    {% if post.comments | length %}
+                                                        <a href="{{ path('admin_post_comments_list', { slug: post.slug }) }}" class="btn bg-color-orange txt-color-white btn-xs" title="{{ 'comment.view_comments' | trans }}"><i class="fa fa-comments-o"></i></a>
+                                                    {% endif %}
+                                                    <a href="{{ path('admin_post_edit', { id: post.id }) }}" class="btn bg-color-green txt-color-white btn-xs" title="{{ 'labels.edit' | trans }}"><i class="fa fa-edit"></i></a>
+                                                    <a href="{{ path('admin_post_duplicate', { id: post.id }) }}" class="btn bg-color-blue txt-color-white btn-xs duplicate-post" title="{{ 'post.duplicate_post' | trans }}"><i class="fa fa-files-o"></i></a>
+                                                    <a href="{{ path('admin_post_delete', { id: post.id }) }}" class="btn bg-color-red txt-color-white btn-xs delete-record" title="{{ 'labels.delete' | trans }}"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center raw-paginator">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            {% else %}
+                                <div class="no-results">
+                                    <i class="fa-fw fa fa-info"></i>
+                                    {{ 'post.no_posts' | trans }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        (function($) {
+            $(".delete-record").click(function(e) {
+                var button = $(this);
+                $.SmartMessageBox({
+                    title : "{{ 'labels.delete_confirm' | trans }}",
+                    content : "{{ 'labels.delete_confirm_alert' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        location.href = $(button).attr('href');
+                    }
+                });
+                e.preventDefault();
+            });
+
+            $(".duplicate-post").click(function(e) {
+                var button = $(this);
+                $.SmartMessageBox({
+                    title : "{{ 'post.duplicate_post' | trans }}",
+                    content : "{{ 'post.duplicate_confirm_text' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        location.href = $(button).attr('href');
+                    }
+                });
+                e.preventDefault();
+            })
+        })(jQuery);
+    </script>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+# you can read more about security in the related section of the documentation
+# http://symfony.com/doc/current/book/security.html
+security:
+    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
+    encoders:
+        Blog\CoreBundle\Entity\User: { algorithm: sha1, encode_as_base64: false, iterations: 0 }
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    # http://symfony.com/doc/current/book/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_CENTER:      [ROLE_PARENT]
+        ROLE_ADMIN:       [ROLE_CENTER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        main:
+            entity: { class: Blog\CoreBundle\Entity\User }
+
+    # the main part of the security, where you can set up firewalls
+    # for specific sections of your app
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # secures part of the application
+        main:
+            remember_me:
+                key: ESFBLOG071200
+                lifetime: 31536000
+                path:     /
+                domain:   ~ # Defaults to the current domain from $_SERVER
+            pattern:     ^/
+            anonymous:   ~
+            switch_user: true
+            form_login:
+                login_path: login
+                check_path: login_check
+            logout:
+                path: /logout
+                target: /
+
+    # with these settings you can restrict or allow access for different parts
+    # of your application based on roles, ip, host or methods
+    # http://symfony.com/doc/current/cookbook/security/access_control.html
+    access_control:
+        - { path: ^/es/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/ca/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/en/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/admin/*, roles: [ROLE_CENTER] }
+        - { path: ^/*, roles: [ROLE_PARENT] }

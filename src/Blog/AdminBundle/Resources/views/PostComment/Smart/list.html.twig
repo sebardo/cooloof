@@ -1,0 +1,153 @@
+{% extends 'AdminBundle:Layout:Smart/layout.html.twig' %}
+
+{% block body_class %}admin-user{% endblock %}
+
+{% block breadcrumbs %}
+    {% if post %}
+        <li><a href="{{ path('admin_post_list') }}">{{ 'post.posts' | trans }}</a></li>
+        <li><a href="{{ path('admin_post_edit', { id: post.id }) }}">{{ post.shortTitle }}</a></li>
+    {% endif %}
+    <li>{{ 'comment.comments' | trans }}</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa fa-comments-o fa-fw"></i>
+                {{ 'comment.comments' | trans }} {{ post ? '(' ~ post.shortTitle ~ ')' : '' }}
+            </h1>
+        </div>
+        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-6">
+            <div class="buttons-box">
+                <a id="btn-validate" class="btn btn-sm bg-color-blue txt-color-white" href="{{ path('admin_post_new') }}">
+                    <i class="fa fa-check-square-o"></i>
+                    {{ 'comment.validate' | trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="" id="widget-grid">
+        <div class="row">
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+                <div data-widget-editbutton="false" id="wid-id-0" class="jarviswidget jarviswidget-color-darken" role="widget">
+                    <header role="heading">
+                        <div class="jarviswidget-ctrls" role="menu">
+                            <a data-placement="bottom" title="" rel="tooltip" class="button-icon jarviswidget-fullscreen-btn" href="javascript:void(0);" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a>
+                        </div>
+                        <span class="widget-icon"> <i class="fa fa-comments-o"></i> </span>
+                        <h2>{{ 'comment.comments_list' | trans }}</h2>
+                        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+                    </header>
+                    <div role="content">
+                        <div class="widget-body no-padding">
+                            <!-- Buscador -->
+                            <div class="well">
+                                <form action="{{ post ? path('admin_post_comments_list', { slug: post.slug }) : path('admin_post_comments_all_list') }}" method="POST">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="{{ 'comment.search_comments' | trans }}" class="form-control" name="query" value="{{ app.request.get('query') }}">
+                                        <div class="input-group-btn">
+                                            <button type="submit" class="btn bg-color-blue txt-color-white">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <a href="{{ post ? path('admin_post_comments_list', { slug: post.slug }) : path('admin_post_comments_all_list') }}" class="btn bg-color-blue txt-color-white">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- End Buscador -->
+                            {% if pagination | length %}
+                                <form action="{{ post ? path('admin_post_comment_validate_batch', { slug: post.slug }) : path('admin_post_comment_all_validate_batch') }}" method="post" id="batch-form">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-responsive">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>{{ 'comment.name' | trans }}</th>
+                                                <th>{{ 'comment.comment' | trans }}</th>
+                                                <th>{{ 'labels.date' | trans }}</th>
+                                                {% if not post %}
+                                                    <th>{{ 'comment.post' | trans }}</th>
+                                                {% endif %}
+                                                <th>{{ 'comment.validated' | trans }}</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for postComment in pagination %}
+                                                <tr>
+                                                    <td><input type="checkbox" name="comments[]" value="{{ postComment.id }}"/></td>
+                                                    <td>{{ postComment.name }}</td>
+                                                    <td>{{ postComment.comment }}</td>
+                                                    <td>{{ postComment.created | date('d/m/Y H:m') }}</td>
+                                                    {% if not post %}
+                                                        <td>{{ postComment.post.title }}</td>
+                                                    {% endif %}
+                                                    <td>{{ postComment.validated ? 'labels.yes' | trans : 'labels.no' | trans }}</td>
+                                                    <td align="center" nowrap>
+                                                        <a href="{{ post ? path('admin_post_comment_edit', { slug: postComment.post.slug, commentId: postComment.id }) : path('admin_post_comment_all_edit', { commentId: postComment.id }) }}" class="btn bg-color-blue txt-color-white btn-xs" title="{{ 'labels.edit' | trans }}"><i class="fa fa-edit"></i></a>
+                                                        <a href="{{ post ? path('admin_post_comment_delete', { slug: postComment.post.slug, commentId: postComment.id }) : path('admin_post_comment_all_delete', { commentId: postComment.id }) }}" class="btn bg-color-blue txt-color-white btn-xs delete-record" title="{{ 'labels.delete' | trans }}"><i class="fa fa-trash-o"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </form>
+                                <div class="text-center raw-paginator">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            {% else %}
+                                <div class="no-results">
+                                    <i class="fa-fw fa fa-info"></i>
+                                    {{ 'comment.no_comments' | trans }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        (function($) {
+            $(".delete-record").click(function(e) {
+                var button = $(this);
+                $.SmartMessageBox({
+                    title : "{{ 'labels.delete_confirm' | trans }}",
+                    content : "{{ 'labels.delete_confirm_alert' | trans }}",
+                    buttons : '[{{ 'labels.no' | trans }}][{{ 'labels.yes' | trans }}]'
+                }, function(ButtonPressed) {
+                    if (ButtonPressed === "{{ 'labels.yes' | trans }}") {
+                        location.href = $(button).attr('href');
+                    }
+                });
+                e.preventDefault();
+            });
+
+            $("#btn-validate").click(function(e) {
+                e.preventDefault();
+                if (!$('input[name="comments[]"]:checked').length) {
+                    $.SmartMessageBox({
+                        title : "{{ 'comment.select_comments_title' | trans }}",
+                        content : "{{ 'comment.select_comments_content' | trans }}",
+                        buttons : '[{{ 'labels.accept' | trans }}]'
+                    });
+
+                    return false;
+                }
+
+                $('#batch-form').submit();
+            });
+        })(jQuery);
+    </script>
+
+{% endblock %}
