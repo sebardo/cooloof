@@ -76,7 +76,6 @@ class UtilExtension extends \Twig_Extension
         if ($client->getAccessToken()) {
           $htmlBody = "<div class='alert alert-success'><h3>Autorización concedida</h3> <p>Ya puedes subir videos a YouTube<p>";
           $_SESSION['token'] = $client->getAccessToken();
-          $_SESSION['client'] = serialize($client);
         } else {
           // If the user hasn't authorized the app, initiate the OAuth flow
           $state = mt_rand();
