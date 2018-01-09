@@ -204,8 +204,10 @@ class PostController extends BaseAdminController
                 $em->persist($post);
                 $em->flush();
                 
-                $this->uploadVideo($post, $request->files->get('video'));
-
+                if($request->files->get('video') instanceof UploadedFile){
+                    $this->uploadVideo($post, $request->files->get('video'));
+                }
+                
                 $translator = $this->get('translator');
                 $request->getSession()->getFlashBag()->add('success', $translator->trans('labels.create_ok'));
 
@@ -277,6 +279,10 @@ class PostController extends BaseAdminController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($post);
                 $em->flush();
+                
+                if($request->files->get('video') instanceof UploadedFile){
+                    $this->uploadVideo($post, $request->files->get('video'));
+                }
 
                 $translator = $this->get('translator');
                 $request->getSession()->getFlashBag()->add('success', $translator->trans('labels.update_ok'));
