@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Blog\CoreBundle\Entity\User;
 
 class LoginController extends BaseFrontController
 {
@@ -15,6 +16,15 @@ class LoginController extends BaseFrontController
 
     public function loginAction(Request $request)
     {
+        
+        // whatever *your* User object is
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $em->getRepository('CoreBundle:User')->find(1);
+//        $plainPassword = 'admin';
+//        $encoder = $this->container->get('security.password_encoder');
+//        $encoded = $encoder->encodePassword($user, $plainPassword);
+        //print_r($encoded);die;8919058ed1b22e260c8921f237becf0037bd057c
+
         $session = $request->getSession();
 
         // get the login error if there is one

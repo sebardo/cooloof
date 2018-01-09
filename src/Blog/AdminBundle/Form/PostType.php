@@ -32,6 +32,7 @@ class PostType extends AbstractType
             ->add('active', null, array('label' => 'labels.active'))
             ->add('images', 'file', array('mapped' => false, 'multiple' => true, 'required' => false))
             ->add('image', 'file', array('mapped' => false, 'multiple' => false, 'required' => false))
+            ->add('video', 'file', array('mapped' => false, 'multiple' => false, 'required' => false))
             ->add('editId', 'hidden')
             ->add('week', 'entity', array(
                 'class' => 'CoreBundle:Week',

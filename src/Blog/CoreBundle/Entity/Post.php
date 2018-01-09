@@ -93,6 +93,13 @@ class Post
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="video", type="string", length=255, nullable=true)
+     */
+    private $video;
 
     /**
      * @var boolean
@@ -290,6 +297,30 @@ class Post
     public function getImage()
     {
         return $this->image;
+    }
+
+    
+   /**
+     * Set video
+     *
+     * @param string $video
+     * @return Post
+     */
+    public function setVideo($video)
+    {
+        $this->video = $video;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string 
+     */
+    public function getVideo()
+    {
+        return $this->video;
     }
 
     /**
