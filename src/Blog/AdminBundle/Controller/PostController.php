@@ -74,7 +74,7 @@ class PostController extends BaseAdminController
             // Create an asset resource and set its snippet metadata and type.
             // This example sets the video's title, description, keyword tags, and
             // video category.
-            $snippet = new Google_Service_YouTube_VideoSnippet();
+            $snippet = new \Google_Service_YouTube_VideoSnippet();
             $snippet->setTitle($entity->getTitle());
             $snippet->setDescription("Test description");
             //$snippet->setDescription($entity->getContent());
@@ -84,10 +84,10 @@ class PostController extends BaseAdminController
             $snippet->setCategoryId("22");
             // Set the video's status to "public". Valid statuses are "public",
             // "private" and "unlisted".
-            $status = new Google_Service_YouTube_VideoStatus();
+            $status = new \Google_Service_YouTube_VideoStatus();
             $status->privacyStatus = "public";
             // Associate the snippet and status objects with a new video resource.
-            $video = new Google_Service_YouTube_Video();
+            $video = new \Google_Service_YouTube_Video();
             $video->setSnippet($snippet);
             $video->setStatus($status);
             // Specify the size of each chunk of data, in bytes. Set a higher value for
@@ -100,7 +100,7 @@ class PostController extends BaseAdminController
             // Create a request for the API's videos.insert method to create and upload the video.
             $insertRequest = $youtube->videos->insert("status,snippet", $video);
             // Create a MediaFileUpload object for resumable uploads.
-            $media = new Google_Http_MediaFileUpload(
+            $media = new \Google_Http_MediaFileUpload(
                 $client,
                 $insertRequest,
                 'video/*',
