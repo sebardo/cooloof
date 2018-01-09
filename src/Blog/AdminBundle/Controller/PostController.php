@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @Route("/posts")
@@ -41,9 +42,30 @@ class PostController extends BaseAdminController
         return $this->render("AdminBundle:Post:{$this->getTemplate()}/list.html.twig", array('pagination' => $pagination));
     }
     
-    private function uploadVideoForm(\Symfony\Component\HttpFoundation\File\UploadedFile $file ) 
+    private function uploadVideo(Post $entity, UploadedFile $file ) 
     {
-        $client = serialize($_SESSION['client']);
+        $client = new \Google_Client();
+        $client->setClientId($this->container->getParameter('client_id'));
+        $client->setClientSecret($this->container->getParameter('client_secret'));
+        $client->setScopes('https://www.googleapis.com/auth/youtube');
+        $redirect = filter_var('http://' . $_SERVER['HTTP_HOST'] . '/admin/posts/new', FILTER_SANITIZE_URL);
+        $client->setRedirectUri($redirect);
+
+        // Define an object that will be used to make all API requests.
+        $youtube = new \Google_Service_YouTube($client);
+        if (isset($_GET['code'])) {
+          if (strval($_SESSION['state']) !== strval($_GET['state'])) {
+            die('The session state did not match.');
+          }
+          $client->authenticate($_GET['code']);
+          $_SESSION['token'] = $client->getAccessToken();
+          header('Location: ' . $redirect);
+        }
+        if (isset($_SESSION['token'])) {
+          $client->setAccessToken($_SESSION['token']);
+        }
+        // Check to ensure that the access token was successfully acquired.
+        if ($client->getAccessToken()) {
          // Define an object that will be used to make all API requests.
         $youtube = new \Google_Service_YouTube($client);
         try{
@@ -53,8 +75,9 @@ class PostController extends BaseAdminController
             // This example sets the video's title, description, keyword tags, and
             // video category.
             $snippet = new Google_Service_YouTube_VideoSnippet();
-            $snippet->setTitle($file->getBasename());
+            $snippet->setTitle($entity->getTitle());
             $snippet->setDescription("Test description");
+            //$snippet->setDescription($entity->getContent());
             $snippet->setTags(array("tag1", "tag2"));
             // Numeric video category. See
             // https://developers.google.com/youtube/v3/docs/videoCategories/list 
@@ -96,19 +119,26 @@ class PostController extends BaseAdminController
             fclose($handle);
             // If you want to make other calls after the file upload, set setDefer back to false
             $client->setDefer(false);
-            $htmlBody .= "<h3>Video Uploaded</h3><ul>";
-            $htmlBody .= sprintf('<li>%s (%s)</li>',
-                $status['snippet']['title'],
-                $status['id']);
-            $htmlBody .= '</ul>';
+            $entity->setVideo($status['id']);
+            $this->getDoctrine()->getManager()->flush();
+            
+//            $htmlBody .= "<h3>Video Uploaded</h3><ul>";
+//            $htmlBody .= sprintf('<li>%s (%s)</li>',
+//                $status['snippet']['title'],
+//                $status['id']);
+//            $htmlBody .= '</ul>';
 
           } catch (Google_Service_Exception $e) {
             $htmlBody .= sprintf('<p>A service error occurred: <code>%s</code></p>',
                 htmlspecialchars($e->getMessage()));
+            
+            print_r($htmlBody);die;
           } catch (Google_Exception $e) {
             $htmlBody .= sprintf('<p>An client error occurred: <code>%s</code></p>',
                 htmlspecialchars($e->getMessage()));
+            print_r($htmlBody);die;
           }
+        }
     }
     /**
      * @Route("/new", name="admin_post_new")
@@ -125,8 +155,6 @@ class PostController extends BaseAdminController
         
         if ($request->getMethod() == 'POST')
         {
-            $this->uploadVideo($request->files->get('video'));
-            print_r($request->files->get('video'));die();
             $form->handleRequest($request);
 
             /** @var \PunkAve\FileUploaderBundle\Services\FileUploader $fileUploader */
@@ -175,6 +203,8 @@ class PostController extends BaseAdminController
 
                 $em->persist($post);
                 $em->flush();
+                
+                $this->uploadVideo($post, $request->files->get('video'));
 
                 $translator = $this->get('translator');
                 $request->getSession()->getFlashBag()->add('success', $translator->trans('labels.create_ok'));
