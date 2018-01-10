@@ -7,11 +7,11 @@
 {% block content %}
 
     <article>
-        {% if post.image %}
+        {% if post.image != '' or post.video  != ''%}
             <div class="image">
                 {% if (post.video != '') %}
                 <iframe width="820" height="461" src="https://www.youtube.com/embed/{{ post.video }}?rel=0" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
-                {% else %}
+                {% elseif post.image %}
                 <img src="{{ path('serve_file', { id: post.id, fileName: post.image, folder: 'large', type: 'main' }) }}"/>
                 {% endif %}
             </div>
