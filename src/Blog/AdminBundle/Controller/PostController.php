@@ -119,6 +119,18 @@ class PostController extends BaseAdminController
             fclose($handle);
             // If you want to make other calls after the file upload, set setDefer back to false
             $client->setDefer(false);
+            
+            //Add video to playlist
+            $playlistId = 'PLE30W2mYZQB7KuEwe3wFJu7v3tAoHMzfQ';
+            $snippet = new \Google_Service_YouTube_PlaylistItemSnippet();
+            $snippet->setPlaylistId($playlistId);
+            $resourceId = new \Google_Service_YouTube_ResourceId();
+            $resourceId->kind = 'youtube#video';
+            $resourceId->videoId = $status['id'];
+            $snippet->setResourceId($resourceId);
+            $youtube->playlistItems->insert('snippet', $snippet);
+
+            //Save video id on post
             $entity->setVideo($status['id']);
             $this->getDoctrine()->getManager()->flush();
             
