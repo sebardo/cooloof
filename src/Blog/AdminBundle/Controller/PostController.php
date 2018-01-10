@@ -128,7 +128,10 @@ class PostController extends BaseAdminController
             $resourceId->kind = 'youtube#video';
             $resourceId->videoId = $status['id'];
             $snippet->setResourceId($resourceId);
-            $youtube->playlistItems->insert('snippet', $snippet);
+            
+            $playlistItem = new \Google_Service_YouTube_PlaylistItem();
+            $playlistItem->setSnippet($snippet);
+            $youtube->playlistItems->insert('snippet', $playlistItem);
 
             //Save video id on post
             $entity->setVideo($status['id']);
