@@ -26,3 +26,4 @@ parameters:
 
     client_id: 922040783377-rlqabnf9pohfsjea6520elfhtmbdtbj1.apps.googleusercontent.com
     client_secret: paNRfDe98BeE3hzRtJk0F0IB
+    client_refresh_token: '1/VcKPLufKCvc7i40nP6ooxbdonQU23xFwO1q_dwBoI3w'
