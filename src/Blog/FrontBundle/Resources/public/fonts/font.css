@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'dinregularwebfont';
+	src: url('dinregularwebfont.eot');
+	src: local('dinregularwebfont'), url('dinregularwebfont.woff') format('woff'), url('dinregularwebfont.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_18347">Text with this font applied</p> */
+.fontsforweb_fontid_18347 {
+	font-family: 'dinregularwebfont' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

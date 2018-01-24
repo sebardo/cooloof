@@ -124,3 +124,5 @@ login:
     user: Usuari
     password: Contrasenya
     access: Accedir
+    user.placeholder: 'Si us plau introduixi el seu usuari:'
+    pass.placeholder: 'Si us plau introduixi la seva contrasenya:'

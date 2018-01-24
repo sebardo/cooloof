@@ -23,3 +23,5 @@ login:
     user: User
     password: Password
     access: Access
+    user.placeholder: 'Please enter your username:'
+    pass.placeholder: 'Please enter your password:'

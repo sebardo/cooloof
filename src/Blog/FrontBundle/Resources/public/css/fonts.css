@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
     font-family: 'DINAlternateRegular';
     src: url('../fonts/din_alternate-webfont.eot');
     src: url('../fonts/din_alternate-webfont.eot?iefix') format('eot'),
@@ -32,4 +32,14 @@
     font-weight: normal;
     font-style: normal;
 
+}*/
+
+@font-face {
+	font-family: 'dinregularwebfont';
+	src: url('../fonts/dinregularwebfont.eot');
+	src: local('../fonts/dinregularwebfont'), url('../fonts/dinregularwebfont.woff') format('woff'), url('../fonts/dinregularwebfont.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_18347">Text with this font applied</p> */
+.fontsforweb_fontid_18347 {
+	font-family: 'dinregularwebfont' !important;
 }

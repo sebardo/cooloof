@@ -137,6 +137,8 @@ login:
     password: Contraseña
     remember: Recordarme
     access: Acceder
+    user.placeholder: 'Por favor, introduzca su usuario:'
+    pass.placeholder: 'Por favor, introduzca su contraseña:'
 
 upload:
   uploads_menu: Uploads

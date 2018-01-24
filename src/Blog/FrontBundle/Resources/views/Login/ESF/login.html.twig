@@ -1,29 +1,195 @@
-{% extends 'FrontBundle:Layout:ESF/layout.html.twig' %}
+{% set route = app.request.attributes.get('_route') %}
+<!DOCTYPE html lang="{{ app.request.locale }}">
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex, nofollow">
+        <title>{% block title %}Blog - CoolOff by Kids&Us{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}{{ 'meta.description' | trans }}{% endblock %}" />
+        <link rel="canonical" href="{{ app.request.uri }}"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% block body_class %}class="login"{% endblock %}
+        <!-- Favicons -->
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
-{% block content %}
-    <div class="intro">
-        <img src="{{ asset('bundles/front/images/bg-login.png') }}" alt="English Summer Fun"/>
-    </div>
-    <div class="login">
-        {% if error %}
-            <div class="error">
-                {{ error.message|trans({},'messages') }}
+        <!-- OpenGraph -->
+        <meta property="og:title" content="{% block meta_og_title %}English Summer Fun Blog{% endblock %}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{ app.request.uri }}" />
+        <meta property="og:image" content="{% block meta_og_image %}{{ app.request.scheme ~ '://' ~ app.request.host ~ asset('bundles/front/images/kidsandus-logo.png') }}{% endblock %}" />
+        <meta property="og:description" content="{% block meta_og_description %}{{ 'meta.description' | trans }}{% endblock %}" />
+        <meta name="generator" content="Symfony 2 (http://symfony.com)" />
+        <meta name="dcterms.type" content="Text" />
+        <meta name="dcterms.format" content="text/html" />
+        <meta name="geo.placename" content="Carrer del Canonge Montanyà, 1-5, 08242 Manresa, Barcelona, España" />
+        <meta name="geo.position" content="41.7268990;1.8219110" />
+        <meta name="geo.region" content="ES-Catalunya" />
+        <meta name="ICBM" content="41.7268990, 1.8219110" />
+        <meta name="DC.language" content="{{ app.request.locale }}" />
+
+        {% block stylesheets %}
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/front/css/fonts.css") }}">
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/front/css/supersized.css") }}">
+            <link rel="stylesheet" type="text/css" media="screen" href="{{ asset("bundles/admin/template/smart/css/font-awesome.min.css") }}">
+        {% endblock %}
+
+        {% stylesheets
+            'bundles/front/css/estils.css'
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}">
+        {% endstylesheets %}
+         
+    </head>
+
+    <body  {% block body_class %}class="login"{% endblock %}>
+       
+        <div class="contenidor">
+            <div class="idiomes">
+                <a {% if app.request.locale == 'en'%} class="actiu" {% endif %} href="{{ path("blog_list", {"_locale": "en"}) }}" title="{{ 'menu.english_version' | trans }}">{{ 'menu.english' | trans }}</a>
+                <a {% if app.request.locale == 'es'%} class="actiu" {% endif %}href="{{ path("blog_list", {"_locale": "es"}) }}" title="{{ 'menu.spanish_version' | trans }}">{{ 'menu.spanish' | trans }}</a>  
+                <a class="{% if app.request.locale == 'ca'%} actiu {% endif %} last" href="{{ path("blog_list", {"_locale": "ca"}) }}" title="{{ 'menu.catalan_version' | trans }}">{{ 'menu.catalan' | trans }}</a>
+
             </div>
-        {% endif %}
-        <form action="{{ path('login_check') }}" method="POST">
-            <div>
-                <label class="label">{{ 'login.user' | trans }}</label>
-                <input type="text" name="_username" value="{{ last_username }}" maxlength="50" required="required"/>
+            <div class="logo"><img src="/bundles/front/images/logo.png" width="949" height="124" alt=""/>
+                <div class="fons">
+                    <ul class="menu">
+                        
+                        {#% if app.request.locale == 'es' %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/inscripciones" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% elseif app.request.locale == 'ca' %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/inscripcions" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% else %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/registrations" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% endif %#}
+                        
+
+                        <li><a href="#">Inici</a></li>
+                        <li><a href="#">Cool Off</a></li>
+                        <li><a href="#">Qui som</a></li>
+                        <li><a href="#">Actualitat</a></li>
+                        {% if app.request.locale == 'es' %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/inscripciones" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% elseif app.request.locale == 'ca' %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/inscripcions" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% else %}
+                            <li class="nav4"><a href="https://inscriptions.kidscooloff.com/registrations" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
+                        {% endif %}
+                        <li class="nav5 actiu"><a href="{{ path('blog_list') }}" class="active" title="Blog">Blog</a></li>
+                    </ul>
+                    <div class="formulari">
+                        
+                        {% for flashMessage in app.session.flashbag.get('success') %}
+                            <div class="alert">
+                                {{ flashMessage | raw }}
+                            </div>
+                        {% endfor %}
+                        {% block content %}
+                            <div class="login">
+                                {% if error %}
+                                    <div class="error">
+                                        {{ error.message|trans({},'messages') }}
+                                    </div>
+                                {% endif %}
+                                <form action="{{ path('login_check') }}" method="POST">
+                                    <input type="text" class="usuari" name="_username" value="{{ last_username }}" placeholder="{{ 'login.user.placeholder' | trans }}" maxlength="50" required="required"/>
+                                    <input type="password" class="password" name="_password" maxlength="50" placeholder="{{ 'login.pass.placeholder' | trans }}" required="required"/>
+                                    <button type="submit" class="boto">{{ 'login.access' | trans }}</button>
+                                </form>
+                            </div>
+                        {% endblock %}
+                    </div>
+                </div>
             </div>
-            <div>
-                <label class="label">{{ 'login.password' | trans }}</label>
-                <input type="password" name="_password" maxlength="50" required="required"/>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary">{{ 'login.access' | trans }}</button>
-            </div>
-        </form>
-    </div>
-{% endblock %}
+            <div class="peu">Kids&Us English S.L · C/ Canonge Montanyà 1-5 baixos · 08242 Manresa (Barcelona) · (+34) 902 93 40 23 · <a href="mailto:info@kidsandus.es">info@kidsandus.es</a> · <a href="http://www.kidsandus.es" target="_blank">www.kidsandus.es</a> </div>
+            {% include 'FrontBundle:Blog:sidebar.html.twig' %}
+        </div>
+        
+       
+        {% block javascripts %}
+            <script src="{{ asset("bundles/front/js/jquery.min.js") }}"></script>
+            <script src="{{ asset("bundles/front/js/jquery.easing.min.js") }}"></script>
+            <script src="{{ asset("bundles/front/js/supersized.3.2.7.min.js") }}"></script>
+            <script type="text/javascript">
+               
+                jQuery(function ($) {
+                  
+                    $.supersized({
+
+                        // Functionality
+                        slideshow: 1, // Slideshow on/off
+                        autoplay: 1, // Slideshow starts playing automatically
+                        start_slide: 1, // Start slide (0 is random)
+                        stop_loop: 0, // Pauses slideshow on last slide
+                        random: 0, // Randomize slide order (Ignores start slide)
+                        slide_interval: 3000, // Length between transitions
+                        transition: 6, // 0-None, 1-Fade, 2-Slide Top, 3-Slide Right, 4-Slide Bottom, 5-Slide Left, 6-Carousel Right, 7-Carousel Left
+                        transition_speed: 1000, // Speed of transition
+                        new_window: 1, // Image links open in new window/tab
+                        pause_hover: 0, // Pause slideshow on hover
+                        keyboard_nav: 1, // Keyboard navigation on/off
+                        performance: 1, // 0-Normal, 1-Hybrid speed/quality, 2-Optimizes image quality, 3-Optimizes transition speed // (Only works for Firefox/IE, not Webkit)
+                        image_protect: 1, // Disables image dragging and right click with Javascript
+
+                        // Size & Position						   
+                        min_width: 0, // Min width allowed (in pixels)
+                        min_height: 0, // Min height allowed (in pixels)
+                        vertical_center: 1, // Vertically center background
+                        horizontal_center: 1, // Horizontally center background
+                        fit_always: 0, // Image will never exceed browser width or height (Ignores min. dimensions)
+                        fit_portrait: 1, // Portrait images will not exceed browser height
+                        fit_landscape: 0, // Landscape images will not exceed browser width
+
+                        // Components							
+                        slide_links: 'blank', // Individual links for each slide (Options: false, 'num', 'name', 'blank')
+                        thumb_links: 1, // Individual thumb links for each slide
+                        thumbnail_navigation: 0, // Thumbnail navigation
+                        slides: [// Slideshow Images
+                            {image: '{{ asset('bundles/front/images/fons-blog.jpg') }}'},
+                        ],
+                        progress_bar: 1, 						
+                        mouse_scrub: 0
+
+                    });
+
+                    if ($("#sidebar").length)
+                    {
+                        $sidebar = $("#sidebar");
+                        $window = $(window);
+                        offset = $sidebar.offset();
+                        topPadding = 15;
+
+                        updateSideBarTopPosition();
+                        $(window).scroll(function() {
+                            updateSideBarTopPosition();
+                        });
+
+                        updateSideBarLeftPosition($('#container').position());
+                        $(window).resize(function() {
+                            updateSideBarLeftPosition($('#container').position());
+                        });
+                    }
+                });
+
+                function updateSideBarLeftPosition(position) {
+                    $('#sidebar').css('left', (position.left + 900) + 'px');
+                }
+
+                function updateSideBarTopPosition() {
+                    if ($window.scrollTop() > offset.top) {
+                        $sidebar.stop().animate({
+                            marginTop: $window.scrollTop() - offset.top + topPadding
+                        });
+                    } else {
+                        $sidebar.stop().animate({
+                            marginTop: 0
+                        });
+                    }
+                }
+                //-->
+            </script>
+        {% endblock %}
+    </body>
+</html>
+
