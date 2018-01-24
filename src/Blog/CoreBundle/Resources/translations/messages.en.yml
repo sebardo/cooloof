@@ -1,6 +1,9 @@
 Bad credentials.: The username or password are incorrect.
 
 menu:
+    home: Home
+    aboutus: 'Who are we'
+    news: "What's new"
     inscriptions: Inscriptions
     catatan_version: Catalan version
     spanish_version: Spanish version

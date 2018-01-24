@@ -48,6 +48,9 @@ labels:
     order: Orden
 
 menu:
+    home: Inicio
+    aboutus: Quienes somos
+    news: Actualidad
     activities: Actividades
     where: ¿Dónde?
     inscriptions: Inscripciones

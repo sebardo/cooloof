@@ -65,10 +65,10 @@
                         {% endif %#}
                         
 
-                        <li><a href="#">Inici</a></li>
+                        <li><a href="#">{{ 'menu.home' | trans }}</a></li>
                         <li><a href="#">Cool Off</a></li>
-                        <li><a href="#">Qui som</a></li>
-                        <li><a href="#">Actualitat</a></li>
+                        <li><a href="#">{{ 'menu.aboutus' | trans }}</a></li>
+                        <li><a href="#">{{ 'menu.news' | trans }}</a></li>
                         {% if app.request.locale == 'es' %}
                             <li class="nav4"><a href="https://inscriptions.kidscooloff.com/inscripciones" title="{{ 'menu.inscriptions' | trans }}">{{ 'menu.inscriptions' | trans }}</a></li>
                         {% elseif app.request.locale == 'ca' %}
